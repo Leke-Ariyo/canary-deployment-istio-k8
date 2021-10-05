@@ -1,0 +1,33 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: flask-app-gateway
+  namespace: canary-test
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: flask-app
+  namespace: canary-test
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - flask-app-gateway
+  http:
+  - route:
+    - destination:
+        host: flask-app
+        port:
+          number: 80
+ 

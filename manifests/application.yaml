@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-app
+  namespace: canary-test
+  labels:
+    app: flask-app
+    service: flask-app
+spec:
+  ports:
+  - port: 80
+    targetPort: 5000
+    name: http
+  selector:
+    app: flask-app
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: flask-app
+  namespace: canary-test
+  labels:
+    account: flask-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app
+  namespace: canary-test
+  labels:
+    app: flask-app
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-app
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: flask-app
+        version: v1
+    spec:
+      serviceAccountName: flask-app
+      containers:
+      - name: flask-app
+        image: waiyanwinhtain/canary-flask-app:v1
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: LOG_DIR
+          value: "/tmp/logs"
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: wlp-output
+          mountPath: /opt/ibm/wlp/output
+        securityContext:
+          runAsUser: 1000
+      volumes:
+      - name: wlp-output
+        emptyDir: {}
+      - name: tmp
+        emptyDir: {}
