@@ -1,6 +1,6 @@
 `OVERVIEW OF PROJECT`    
 
-This project automates canary deployment of various versions of a flask app with istio & flagger(https://flagger.app/) while circleci is used for continuous integration. A Dockerfile is used to build an image and deploy to a container registry (Dockerhub) then sets the new version on the cluster. It deploys only 50% of the new traffic for one minute and only deploys to all the traffic if there are no 5xx errors in the canary deployment for a minute.
+This project automates canary deployment of various versions of a flask app with istio & flagger(https://flagger.app/) while circleci is used for continuous integration. A Dockerfile is used to build an image and deploy to a container registry (Dockerhub) then sets the new version on the cluster. It deploys only 50% of the new traffic for one minute and only deploys to all the traffic, if there are no 5xx errors in the canary deployment for a minute.
 
 
 `STEPS TO REPRODUCE`:
